@@ -90,7 +90,7 @@ function pixelize(svg,dark,report=()=>{}){
     }
   }
   if(remaining.size||best[0].body.length!==1||best.at(-1).body.length!==food.size+1)throw Error("Incomplete game");
-  const tick=135,pause=1200,duration=Math.max(1,best.length-1)*tick+pause;
+  const tick=180,intro=3200,pause=1200,duration=intro+Math.max(1,best.length-1)*tick+pause;
   const snake=dark?{head:"#d2a8ff",body:"#a371f7"}:{head:"#6639ba",body:"#8250df"};
   const bg=p=>real.has(p)?(palette[real.get(p)]||palette.ce):"transparent";
   const board=Array.from({length:N},(_,p)=>bg(p));
@@ -103,12 +103,12 @@ function pixelize(svg,dark,report=()=>{}){
     for(const p of body)frame[p]=snake.body;
     frame[body[0]]=snake.head;
     for(let p=0;p<N;p++)if(frame[p]!==previous[p]){
-      tracks[p].push([i*tick,frame[p]]);
+      tracks[p].push([i===0?0:intro+i*tick,frame[p]]);
       previous[p]=frame[p];
     }
   }
   const pct=t=>Number((100*t/duration).toFixed(6));
-  let css=`/* miaonatie-growing-purple-snake */.cell{shape-rendering:crispEdges;animation-duration:${duration}ms;animation-iteration-count:infinite;animation-timing-function:steps(1,end)}@media(prefers-reduced-motion:reduce){.cell{animation:none!important}}`;
+  let css=`/* miaonatie-growing-purple-snake-v2 */.cell{shape-rendering:crispEdges;animation-duration:${duration}ms;animation-iteration-count:infinite;animation-timing-function:steps(1,end)}@media(prefers-reduced-motion:reduce){.cell{animation:none!important}}`;
   const rects=[];
   for(let p=0;p<N;p++){
     const track=tracks[p];
@@ -116,13 +116,13 @@ function pixelize(svg,dark,report=()=>{}){
     let attr="";
     if(track.length>1){
       const name="p"+p;
-      css+=`@keyframes ${name}{${track.map(([t,c])=>`${pct(t)}%{fill:${c}}`).join("")}100%{fill:${track.at(-1)[1]}}}`;
+      css+=`@keyframes ${name}{${track.map(([t,c])=>`${pct(t)}%{fill:${c}}`).join("")}100%{fill:${track[0][1]}}}`;
       attr=` style="animation-name:${name}"`;
     }
     rects.push(`<rect class="cell" x="${p%w*16+2}" y="${Math.floor(p/w)*16+2}" width="12" height="12" fill="${track[0][1]}"${attr}/>`);
   }
   const width=w*16+8,height=h*16+8;
-  report({food:food.size,startLength:best[0].body.length,finalLength:best.at(-1).body.length,moves:best.length-1,duration,collisionFree:true});
+  report({introMs:intro,tickMs:tick,food:food.size,startLength:best[0].body.length,finalLength:best.at(-1).body.length,moves:best.length-1,duration,collisionFree:true});
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 ${width} ${height}" width="${width}" height="${height}"><title>Growing contribution snake</title><desc>A purple snake grows one square per contribution day. Contribution data from Platane/snk. ${food.size} food cells; final length ${food.size+1}.</desc><style>${css}</style>${rects.join("")}</svg>`;
 }
 
