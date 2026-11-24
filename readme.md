@@ -1,9 +1,4 @@
-welcome
-
-꒰ঌ(⸝⸝ ↀ ᯅ ↀ⸝⸝)໒꒱
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://githubusercontent.com">
-  <source media="(prefers-color-scheme: light)" srcset="https://githubusercontent.com">
-  <img alt="github contribution grid snake animation" src="https://githubusercontent.com">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/miaonatie/miaonatie/output/github-contribution-grid-snake-dark.svg" />
+  <img alt="A little snake eating my GitHub contributions" src="https://raw.githubusercontent.com/miaonatie/miaonatie/output/github-contribution-grid-snake.svg" width="100%" />
 </picture>
